@@ -43,6 +43,26 @@ const senators = []
 const houseMembers = []
 const allCongressPeople = []
 const singleMember = []
+const monthArray = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+]
+const date = new Date()
+const monthKey = date.getMonth()
+const month = monthArray[monthKey]
+const day = date.getDate()
+const year = date.getFullYear()
+const formattedDate = `${month} ${day}, ${year}`
 
 function getSenateMembers() {
     fetch(
@@ -69,7 +89,7 @@ function getSenateMembers() {
                             "state": memberArray[i].state,
                             "phone": memberArray[i].phone,
                             "fax": memberArray[i].fax,
-                            "site": memberArray[i].url, 
+                            "site": memberArray[i].url,
                             "email": memberArray[i].contact_form
                         }
                     )
@@ -85,7 +105,7 @@ function getSenateMembers() {
                             "state": memberArray[i].state,
                             "phone": memberArray[i].phone,
                             "fax": memberArray[i].fax,
-                            "site": memberArray[i].url, 
+                            "site": memberArray[i].url,
                             "email": memberArray[i].contact_form
                         }
                     )
@@ -101,7 +121,7 @@ function getSenateMembers() {
                             "state": memberArray[i].state,
                             "phone": memberArray[i].phone,
                             "fax": memberArray[i].fax,
-                            "site": memberArray[i].url, 
+                            "site": memberArray[i].url,
                             "email": memberArray[i].contact_form
                         }
                     )
@@ -135,7 +155,7 @@ function getHouseMembers() {
                             "state": memberArray[i].state,
                             "phone": memberArray[i].phone,
                             "fax": memberArray[i].fax,
-                            "site": memberArray[i].url, 
+                            "site": memberArray[i].url,
                             "email": memberArray[i].contact_form
                         }
                     )
@@ -150,7 +170,7 @@ function getHouseMembers() {
                             "state": memberArray[i].state,
                             "phone": memberArray[i].phone,
                             "fax": memberArray[i].fax,
-                            "site": memberArray[i].url, 
+                            "site": memberArray[i].url,
                             "email": memberArray[i].contact_form
                         }
                     )
@@ -164,7 +184,7 @@ function getHouseMembers() {
                         "state": memberArray[i].state,
                         "phone": memberArray[i].phone,
                         "fax": memberArray[i].fax,
-                        "site": memberArray[i].url, 
+                        "site": memberArray[i].url,
                         "email": memberArray[i].contact_form
                     })
                 }
@@ -201,7 +221,7 @@ function determineRecipientList() {
         // console.log(allCongressPeople)
         createLetters(allCongressPeople)
     } else {
-        for (let i=0; i<allCongressPeople.length; i++) {
+        for (let i = 0; i < allCongressPeople.length; i++) {
             if (reciptientOptions.value.trim() === `${recipients[i].title} ${recipients[i].firstName} ${recipients[i].lastName}`) {
                 singleMember.push(
                     recipients[i]
@@ -214,14 +234,16 @@ function determineRecipientList() {
 }
 
 function createLetters(recipientArray) {
-    for (let i=0; i<recipientArray.length; i++) {
+    for (let i = 0; i < recipientArray.length; i++) {
         console.log(
             `${recipientArray[i].title} ${recipientArray[i].firstName} ${recipientArray[i].lastName}`,
             "\n",
             `${recipientArray[i].address}`,
             "\n",
             `${recipientArray[i].addressSecondLine}`
-            )
+        )
+
+        console.log(formattedDate)
     }
 }
 
