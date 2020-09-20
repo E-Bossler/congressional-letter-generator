@@ -1,0 +1,17 @@
+.seals {
+    max-width: 200px;
+}
+
+#message {
+    /* margin: 0 15px; */
+    padding: 15px;
+}
+
+.inputs {
+    padding: 0 15px 0 15px ;
+    border-radius: 15px;
+}
+
+body {
+    background-image: linear-gradient(rgb(50, 183, 228), rgb(187, 187, 187))
+}
