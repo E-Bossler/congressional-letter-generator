@@ -3,11 +3,39 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
+import gen from '../utils/index'
+
 
 class GeneratorForm extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
+
+        const senderData = {
+            "firstName": document.getElementById('sender-first-name').value,
+            "lastName": document.getElementById('sender-last-name').value,
+            "addressLineOne": document.getElementById('formGridAddress1').value,
+            "addressLineTwo": document.getElementById('formGridAddress2').value,
+            "city": document.getElementById('formGridCity').value,
+            "state": document.getElementById('formGridState').value,
+            "zip": document.getElementById('formGridZip').value,
+            "email": document.getElementById('formHorizontalEmail').value,
+            "phone": document.getElementById('formHorizontalPhone').value,
+            "subject": document.getElementById('subject').value,
+            "message": document.getElementById('message_area').value
+        }
+
+        const reciptientOptions = document.getElementById('recipients')
+        console.log(reciptientOptions.value)
+        gen.determineRecipientList(reciptientOptions, senderData);
+    }
+
+    componentDidMount() {
+        const reciptientOptions = document.getElementById('recipients')
+        gen.getSenateMembers()
+        gen.getHouseMembers()
+        gen.addToSelectionList(reciptientOptions)
     }
 
     render() {
@@ -16,11 +44,11 @@ class GeneratorForm extends Component {
 
             <Form>
                 <Container>
-                    <Row>
+                    <Form.Row>
                         <h2>
                             Your Information:
                         </h2>
-                    </Row>
+                    </Form.Row>
                     {/* <Form.Group as={Row}>
                         <Form.Label as={Col}>
                             Your Name:
@@ -41,36 +69,37 @@ class GeneratorForm extends Component {
                         <label for="email_input" className="col-4">Enter your email address:</label>
                         <input type="email" className="col-8  inputs" name="email" id="email_input" placeholder="Your Email" required />
                     </Form.Group> */}
-                    <Form.Row>
-                        <Col>
-                            <Form.Label>First Name</Form.Label>
-                            <Form.Control placeholder="John" />
-                        </Col>
-                        <Col>
-                            <Form.Label>Last Name</Form.Label>
-                            <Form.Control placeholder="Doe" />
-                        </Col>
-                    </Form.Row>
-                    
-                    <Form.Group controlId="formGridAddress1">
+
+                    <Form.Group>
+                        <Form.Label>First Name</Form.Label>
+                        <Form.Control id="sender-first-name" placeholder="Ruth" />
+                    </Form.Group>
+
+                    <Form.Group>
+                        <Form.Label>Last Name</Form.Label>
+                        <Form.Control id="sender-last-name" placeholder="Ginsberg" />
+                    </Form.Group>
+
+
+                    <Form.Group>
                         <Form.Label>Address</Form.Label>
-                        <Form.Control placeholder="1234 Main St" />
+                        <Form.Control id="formGridAddress1" placeholder="1234 Main St" />
                     </Form.Group>
 
-                    <Form.Group controlId="formGridAddress2">
+                    <Form.Group>
                         <Form.Label>Address Line 2</Form.Label>
-                        <Form.Control placeholder="Apartment, studio, or floor" />
+                        <Form.Control id="formGridAddress2" placeholder="Apartment, studio, or floor" />
                     </Form.Group>
 
                     <Form.Row>
-                        <Form.Group as={Col} controlId="formGridCity">
+                        <Form.Group as={Col}>
                             <Form.Label>City</Form.Label>
-                            <Form.Control />
+                            <Form.Control id="formGridCity" />
                         </Form.Group>
 
-                        <Form.Group as={Col} controlId="formGridState">
+                        <Form.Group as={Col}>
                             <Form.Label>State</Form.Label>
-                            <Form.Control as="select" defaultValue="Choose...">
+                            <Form.Control id="formGridState" as="select" defaultValue="Choose...">
                                 <option>Choose...</option>
                                 <option value="AL">Alabama</option>
                                 <option value="AK">Alaska</option>
@@ -126,34 +155,34 @@ class GeneratorForm extends Component {
                             </Form.Control>
                         </Form.Group>
 
-                        <Form.Group as={Col} controlId="formGridZip">
+                        <Form.Group as={Col}>
                             <Form.Label>Zip</Form.Label>
-                            <Form.Control />
+                            <Form.Control  id="formGridZip" />
                         </Form.Group>
                     </Form.Row>
-                    <Form.Group as={Row} controlId="formHorizontalEmail">
+                    <Form.Group as={Row}>
                         <Form.Label column sm={2}>
                             Email:
                             </Form.Label>
                         <Col sm={10}>
-                            <Form.Control type="email" placeholder="Email" />
+                            <Form.Control id="formHorizontalEmail" type="email" placeholder="Email" />
                         </Col>
                     </Form.Group>
 
-                    <Form.Group as={Row} controlId="formHorizontalPhone">
+                    <Form.Group as={Row}>
                         <Form.Label column sm={2}>
                             Phone Number:
                             </Form.Label>
                         <Col sm={10}>
-                            <Form.Control type="phone_number" placeholder="(555) 123-4567" />
+                            <Form.Control id="formHorizontalPhone" type="phone_number" placeholder="(555) 123-4567" />
                         </Col>
                     </Form.Group>
 
-                    <Row>
+                    <Form.Row>
                         <h2>
                             Recipient Information:
                         </h2>
-                    </Row>
+                    </Form.Row>
 
 
 
@@ -165,23 +194,30 @@ class GeneratorForm extends Component {
                             <option required>Select Recipients</option>
                         </Form.Control>
                     </Form.Group>
-                    <Row>
+                    <Form.Row>
                         <h2>
                             Your Message:
                         </h2>
-                    </Row>
-                    <Form.Group as={Row}>
-                        <label className="col-4" for="subject">Subject:</label>
-                        <input className="col-8 inputs" name="subject" size="15" type="text" required id="subject" />
+                    </Form.Row>
+
+                    <Form.Group >
+                        <Form.Label>Subject</Form.Label>
+                        <Form.Control id="subject" placeholder="Ex: Healthcare in America" />
                     </Form.Group>
-                    <Form.Group as={Row}>
-                        <label className="col-12" for="message_area">Please type your message below.</label>
+
+                    <Form.Group>
+                        <Form.Label>Please type your message below.</Form.Label>
+                        <Form.Control as="textarea" id="message_area" rows="8" />
                     </Form.Group>
-                    <Form.Group as={Row}>
-                        <textarea className="col-12  inputs" id="message_area" rows="8" cols="70" required></textarea>
-                    </Form.Group>
-                    <Form.Group as={Row}>
-                        <input name="Submit" className="inputs" type="submit" value="Generate" id="generate" />
+
+
+                    <Form.Group>
+                        <Button
+                            type="submit"
+                            value="Generate"
+                            id="generate"
+                            onClick={e => this.handleSubmit(e)}
+                        >Generate</Button>
                     </Form.Group>
                 </Container>
             </Form>
