@@ -2,12 +2,352 @@ import React, { Component } from "react";
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import { Redirect } from "react-router-dom";
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import gen from '../utils/index'
+// import gen from '../utils/index'
 
+const congressNumber = 116
+const apiKeyHeader = {
+    "X-API-Key": "1ZTW2IDKkCIQocFGrH0USEmDZSiY7yUG4VYJ31Rz"
+}
+const recipients = [
+    {
+        title: "Select Recipients",
+        firstName: "",
+        lastName: "",
+        state: "",
+        inOffice: true
+    },
+    {
+        title: "All Senators",
+        firstName: "and",
+        lastName: "House Members",
+        state: "",
+        inOffice: true
+    },
+    {
+        title: "",
+        firstName: "All",
+        lastName: "Senators",
+        state: "",
+        inOffice: true
+    },
+    {
+        title: "",
+        firstName: "All",
+        lastName: "House Members",
+        state: "",
+        inOffice: true
+    }
+]
+const senators = []
+const houseMembers = []
+const allCongressPeople = []
+// const singleMember = []
+const monthArray = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+]
+const date = new Date()
+const monthKey = date.getMonth()
+const month = monthArray[monthKey]
+const day = date.getDate()
+const year = date.getFullYear()
+const formattedDate = `${month} ${day}, ${year}`
+const templates = []
 
 class GeneratorForm extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            isGenerated: false,
+            userData: {},
+            letterData: []
+        };
+    }
+
+    getSenateMembers() {
+        fetch(
+            `https://api.propublica.org/congress/v1/${congressNumber}/senate/members.json`,
+            {
+                method: "GET",
+                headers: apiKeyHeader
+            }
+        ).then(
+            response => response.json()
+        ).then(
+            json => {
+                const memberArray = json.results[0].members
+                for (let i = 0; i < memberArray.length; i++) {
+                    if (memberArray[i].in_office === true) {
+                        recipients.push(
+                            {
+                                "title": memberArray[i].short_title,
+                                "firstName": memberArray[i].first_name,
+                                "lastName": memberArray[i].last_name,
+                                "address": memberArray[i].office,
+                                "addressSecondLine": "Washington, DC 20510",
+                                "inOffice": memberArray[i].in_office,
+                                "state": memberArray[i].state,
+                                "phone": memberArray[i].phone,
+                                "fax": memberArray[i].fax,
+                                "site": memberArray[i].url,
+                                "email": memberArray[i].contact_form
+                            }
+                        )
+
+                        senators.push(
+                            {
+                                "title": memberArray[i].short_title,
+                                "firstName": memberArray[i].first_name,
+                                "lastName": memberArray[i].last_name,
+                                "address": memberArray[i].office,
+                                "addressSecondLine": "Washington, DC 20510",
+                                "inOffice": memberArray[i].in_office,
+                                "state": memberArray[i].state,
+                                "phone": memberArray[i].phone,
+                                "fax": memberArray[i].fax,
+                                "site": memberArray[i].url,
+                                "email": memberArray[i].contact_form
+                            }
+                        )
+
+                        allCongressPeople.push(
+                            {
+                                "title": memberArray[i].short_title,
+                                "firstName": memberArray[i].first_name,
+                                "lastName": memberArray[i].last_name,
+                                "address": memberArray[i].office,
+                                "addressSecondLine": "Washington, DC 20510",
+                                "inOffice": memberArray[i].in_office,
+                                "state": memberArray[i].state,
+                                "phone": memberArray[i].phone,
+                                "fax": memberArray[i].fax,
+                                "site": memberArray[i].url,
+                                "email": memberArray[i].contact_form
+                            }
+                        )
+                    }
+                }
+            }
+        )
+    }
+
+    getHouseMembers() {
+        fetch(
+            `https://api.propublica.org/congress/v1/${congressNumber}/house/members.json`,
+            {
+                method: "GET",
+                headers: apiKeyHeader
+            }
+        ).then(
+            response => response.json()
+        ).then(
+            json => {
+                const memberArray = json.results[0].members
+                for (let i = 0; i < memberArray.length; i++) {
+                    if (memberArray[i].in_office === true) {
+                        recipients.push(
+                            {
+                                "title": memberArray[i].short_title,
+                                "firstName": memberArray[i].first_name,
+                                "lastName": memberArray[i].last_name,
+                                "address": memberArray[i].office,
+                                "addressSecondLine": "Washington, DC 20515",
+                                "inOffice": memberArray[i].in_office,
+                                "state": memberArray[i].state,
+                                "phone": memberArray[i].phone,
+                                "fax": memberArray[i].fax,
+                                "site": memberArray[i].url,
+                                "email": memberArray[i].contact_form
+                            }
+                        )
+                        houseMembers.push(
+                            {
+                                "title": memberArray[i].short_title,
+                                "firstName": memberArray[i].first_name,
+                                "lastName": memberArray[i].last_name,
+                                "address": memberArray[i].office,
+                                "addressSecondLine": "Washington, DC 20515",
+                                "inOffice": memberArray[i].in_office,
+                                "state": memberArray[i].state,
+                                "phone": memberArray[i].phone,
+                                "fax": memberArray[i].fax,
+                                "site": memberArray[i].url,
+                                "email": memberArray[i].contact_form
+                            }
+                        )
+                        allCongressPeople.push({
+                            "title": memberArray[i].short_title,
+                            "firstName": memberArray[i].first_name,
+                            "lastName": memberArray[i].last_name,
+                            "address": memberArray[i].office,
+                            "addressSecondLine": "Washington, DC 20515",
+                            "inOffice": memberArray[i].in_office,
+                            "state": memberArray[i].state,
+                            "phone": memberArray[i].phone,
+                            "fax": memberArray[i].fax,
+                            "site": memberArray[i].url,
+                            "email": memberArray[i].contact_form
+                        })
+                    }
+                }
+            }
+        )
+    }
+
+    addToSelectionList(reciptientOptions) {
+        setTimeout(
+            function () {
+                // console.log('waiting...',recipients.length)
+
+                for (let i = 0; i < recipients.length; i++) {
+                    // console.log(recipients[i])
+                    reciptientOptions.options[i] = new Option(
+                        `${recipients[i].title} ${recipients[i].firstName} ${recipients[i].lastName} ${recipients[i].state}`,
+                        `${recipients[i].title}-${recipients[i].firstName}-${recipients[i].lastName}`,
+                        false,
+                        false
+                    )
+                }
+
+            },
+            1000
+        )
+    }
+
+    createRecipientArray(recipientArray, senderData) {
+
+        // console.log(senderData)
+        // console.log(recipientArray)
+        for (let i = 0; i < recipientArray.length; i++) {
+            templates.push(
+                {
+                    "html": `<div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="jumbotron jumbotron-fluid" style="background-color: white;">
+                                <div class="container">
+                                    <h5 style="text-align: center;">
+                                        FROM THE DESK OF
+                                    </h5>
+                                    <hr>
+                                    <h5 style="text-align: center;">
+                                        ${senderData.firstName} ${senderData.lastName}
+                                    </h5 style="text-align: center;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2" style="font-weight: bold;">
+                            FROM:
+                        </div>
+                        <p class='col-10'>
+                            ${senderData.firstName} ${senderData.lastName} <br>
+                            ${senderData.addressLineOne}<br>
+                            ${senderData.addressLineTwo}<br>
+                            ${senderData.city}, ${senderData.state} ${senderData.zip}<br>
+                            Phone: ${senderData.phone}<br>
+                            Email: ${senderData.email}<br>
+                        </p>
+                    </div>
+                    <div class="row">
+                        <div class="col-2" style="font-weight: bold;">
+                            DATE:
+                        </div>
+                        <p class='col-10'>
+                            ${formattedDate}
+                        </p>
+                    </div>
+                    <div class="row">
+                        <div class="col-2" style="font-weight: bold;">
+                            TO:
+                        </div>
+                        <p class='col-10'>
+                            ${recipientArray[i].title} ${recipientArray[i].firstName} ${recipientArray[i].lastName}<br>
+                            ${recipientArray[i].address}<br>
+                            ${recipientArray[i].addressSecondLine}
+                        </p>
+                    </div>
+                    <div class="row">
+                        <div class="col-2" style="font-weight: bold;">
+                            SUBJECT:
+                        </div>
+                        <p class='col-10' style="font-weight: bold;">
+                            ${senderData.subject}
+                        </p>
+                    </div>
+                    <div class="row">
+                        <p class='col-11'>
+                            Dear ${recipientArray[i].title} ${recipientArray[i].lastName},
+                        </p>
+                    </div>
+                    <div class="row">
+                        <p class='col-11'>
+                            ${senderData.message}
+                        </p>
+                    </div>
+                    <div class="row">
+                        <p class='col-11'>
+                            Sincerely,<br>
+                            <br>
+                            <br>
+                            ${senderData.firstName} ${senderData.lastName}<br>
+                        </p>
+                    </div>
+                    <p style="page-break-before: always"> </p>
+                </div>
+                     `
+                }
+            );
+            this.setState(
+                {letterData: templates}
+            )
+        }
+        setTimeout(() => {
+            this.setState(
+                {isGenerated: true}
+            )
+        }, 1000);
+    }
+
+    determineRecipientList(reciptientOptions, senderData) {
+        if (reciptientOptions.value.trim() === "-All-Senators") {
+            // console.log(senators)
+            this.createRecipientArray(senators, senderData)
+        } else if (reciptientOptions.value.trim() === "-All-House Members") {
+            // console.log(houseMembers)
+            this.createRecipientArray(houseMembers, senderData)
+        } else if (reciptientOptions.value.trim() === "All Senators-and-House Members") {
+            // console.log(allCongressPeople)
+            this.createRecipientArray(allCongressPeople, senderData)
+        } else {
+            const e = allCongressPeople.filter(
+                f => {
+                    let formattedName = `${f.title}-${f.firstName}-${f.lastName}`
+                    // console.log(formattedName)
+                    return reciptientOptions.value.trim() === formattedName
+                }
+            )
+            this.createRecipientArray(e, senderData)
+        }
+    }
+
+
+
 
     handleSubmit(e) {
         e.preventDefault();
@@ -27,21 +367,29 @@ class GeneratorForm extends Component {
         }
 
         const reciptientOptions = document.getElementById('recipients')
-        console.log(reciptientOptions.value)
-        gen.determineRecipientList(reciptientOptions, senderData);
+        this.determineRecipientList(reciptientOptions, senderData)
+        
     }
 
     componentDidMount() {
         const reciptientOptions = document.getElementById('recipients')
-        gen.getSenateMembers()
-        gen.getHouseMembers()
-        gen.addToSelectionList(reciptientOptions)
+        this.getSenateMembers()
+        this.getHouseMembers()
+        this.addToSelectionList(reciptientOptions)
     }
 
     render() {
+        if (this.state.isGenerated === true) {
+            return <Redirect
+                // data={this.state} 
+                to={{
+                    pathname: '/letters',
+                    state: this.state
+                }}
+            />;
+        }
 
         return (
-
             <Form>
                 <Container>
                     <Form.Row>
@@ -49,27 +397,6 @@ class GeneratorForm extends Component {
                             Your Information:
                         </h2>
                     </Form.Row>
-                    {/* <Form.Group as={Row}>
-                        <Form.Label as={Col}>
-                            Your Name:
-                        </Form.Label>
-                        <Col>
-                            <input name="name" className="inputs" type="text" required id="senderName" />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row}>
-                        <label for="address" className="col-4">Your Mailing Address:</label>
-                        <textarea name="address" className="col-8 inputs" rows="3" cols="30" id="senderAddress" required></textarea>
-                    </Form.Group>
-                    <Form.Group as={Row}>
-                        <label for="phone_num" className="col-4">Your Phone Number:</label>
-                        <input type="tel" className="col-8 inputs" id="phone_num" name="phone_num" required />
-                    </Form.Group>
-                    <Form.Group as={Row}>
-                        <label for="email_input" className="col-4">Enter your email address:</label>
-                        <input type="email" className="col-8  inputs" name="email" id="email_input" placeholder="Your Email" required />
-                    </Form.Group> */}
-
                     <Form.Group>
                         <Form.Label>First Name</Form.Label>
                         <Form.Control id="sender-first-name" placeholder="Ruth" />
@@ -157,7 +484,7 @@ class GeneratorForm extends Component {
 
                         <Form.Group as={Col}>
                             <Form.Label>Zip</Form.Label>
-                            <Form.Control  id="formGridZip" />
+                            <Form.Control id="formGridZip" />
                         </Form.Group>
                     </Form.Row>
                     <Form.Group as={Row}>

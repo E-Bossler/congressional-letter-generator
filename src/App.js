@@ -1,29 +1,30 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './App.css';
-import GeneratorForm from './components/gen-form/generator';
-import Header from './components/header/header'
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Home from './pages/index'
+import Letters from './pages/letters'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Addresses from './pages/addresses';
 
-function App() {
-  return (
-    <div className="App">
-       <Container>
-         <Row>
-          <Col>
-          <Header />
-          </Col>
-         </Row>
-         <Row>
-          <Col>
-          <GeneratorForm />
-          </Col>
-         </Row>
-       </Container>
-    </div>
-  );
+class App extends Component {
+  
+  render() {
+    return (
+      <div className="App">
+        <Router>
+          <Switch>
+            <Route exact path="/" component={Home}></Route>
+  
+            <Route exact path="/letters" component={Letters}></Route>
+
+            <Route exact path="/addresses" component={Addresses}></Route>
+
+          </Switch>
+        </Router>
+      </div>
+    );
+  }
 }
 
 export default App;
+
